@@ -89,8 +89,9 @@ mode = 'fade',
 }: PageTransitionProps) {
 const location = useLocation();
 
+// NOTE: no nested <AnimatePresence> here — App.tsx already wraps the routes.
+// Nesting made every navigation mount/unmount twice.
 return (
-<AnimatePresence mode="wait">
 <motion.div
 key={location.pathname}
 initial={variants[mode].initial}
@@ -98,16 +99,12 @@ animate={variants[mode].animate}
 exit={variants[mode].exit}
 transition={transitionConfig[mode]}
 className="w-full"
-style={{
-willChange: 'transform, opacity',
-backfaceVisibility: 'hidden',
-}}
 >
 {children}
 </motion.div>
-</AnimatePresence>
 );
 }
+
 
 /* =========================
 Scroll To Top
