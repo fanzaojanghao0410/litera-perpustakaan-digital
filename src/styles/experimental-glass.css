@@ -6,10 +6,11 @@
 
 .theme-exp,
 body.theme-exp {
-  --xg-blur-sm: 12px;
-  --xg-blur-md: 20px;
-  --xg-blur-lg: 32px;
-  --xg-blur-xl: 48px;
+  --xg-blur-sm: 8px;
+  --xg-blur-md: 12px;
+  --xg-blur-lg: 16px;
+  --xg-blur-xl: 20px;
+
 
   --xg-bg-1: rgba(255, 255, 255, 0.55);
   --xg-bg-2: rgba(255, 255, 255, 0.72);
