@@ -528,26 +528,33 @@ export function useRemoveFavorite() {
   });
 }
 
-export function useIsFavorite(userId?: string, bookId?: string) {
+/**
+ * Fetches the user's favourite book ids ONCE and shares the result across every
+ * card. Previously each BookCard fired its own `is-favorite` request, so a grid
+ * of 40 books issued 40 parallel requests and re-rendered as each one resolved.
+ */
+export function useFavoriteIds(userId?: string) {
   return useQuery({
-    queryKey: ['is-favorite', userId, bookId],
+    queryKey: ['favorite-ids', userId],
     queryFn: async () => {
-      if (!userId || !bookId) return false;
+      if (!userId) return [] as string[];
       const { data, error } = await (supabase as any)
         .from('favourites')
-        .select('id')
-        .eq('user_id', userId)
-        .eq('book_id', bookId)
-        .single();
-      if (error) {
-        if (error.code === 'PGRST116') return false; // Not found
-        throw error;
-      }
-      return !!data;
+        .select('book_id')
+        .eq('user_id', userId);
+      if (error) throw error;
+      return ((data ?? []) as { book_id: string }[]).map((r) => r.book_id);
     },
-    enabled: !!userId && !!bookId,
+    enabled: !!userId,
+    staleTime: 60_000,
   });
 }
+
+export function useIsFavorite(userId?: string, bookId?: string) {
+  const { data: ids } = useFavoriteIds(userId);
+  return { data: !!bookId && !!ids?.includes(bookId) };
+}
+
 
 // Hook to get book statistics (reader count, views)
 export function useBookStatistics(bookId?: string) {
