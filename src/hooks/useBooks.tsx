@@ -499,6 +499,7 @@ export function useAddFavorite() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['favorite-ids'] });
       toast.success('Buku ditambahkan ke favorit');
     },
     onError: (error: Error) => {
@@ -520,6 +521,7 @@ export function useRemoveFavorite() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['favorites'] });
+      queryClient.invalidateQueries({ queryKey: ['favorite-ids'] });
       toast.success('Buku dihapus dari favorit');
     },
     onError: (error: Error) => {
