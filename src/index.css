@@ -51,9 +51,10 @@
       radial-gradient(800px 600px at 50% 120%, rgba(var(--brand-teal-rgb), 0.08), transparent 70%),
       linear-gradient(180deg, #fafbfd 0%, #f3f6f8 46%, #edf2f4 100%);
 
-    --glass-bg: rgba(255, 255, 255, 0.30);
-    --glass-bg-strong: rgba(255, 255, 255, 0.44);
-    --glass-bg-soft: rgba(255, 255, 255, 0.18);
+    --glass-bg: rgba(255, 255, 255, 0.52);
+    --glass-bg-strong: rgba(255, 255, 255, 0.74);
+    --glass-bg-soft: rgba(255, 255, 255, 0.38);
+
     --glass-border: rgba(255, 255, 255, 0.18);
     --glass-border-soft: rgba(255, 255, 255, 0.12);
     --glass-hairline: rgba(255, 255, 255, 0.22);
