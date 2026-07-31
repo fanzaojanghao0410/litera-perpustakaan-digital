@@ -82,7 +82,7 @@
     --t-fast: 160ms;
     --t-base: 260ms;
     --t-slow: 420ms;
-    --transition-smooth: background var(--t-base) var(--ease-out), border-color var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out), transform var(--t-base) var(--ease-out), opacity var(--t-fast) var(--ease-out);
+    --transition-smooth: box-shadow var(--t-base) var(--ease-out), transform var(--t-base) var(--ease-out), border-color var(--t-base) var(--ease-out);
 
     --font-heading: 'DM Sans', 'Inter', system-ui, sans-serif;
     --font-body: 'Inter', system-ui, sans-serif;
