@@ -403,21 +403,23 @@ body.theme-exp::before {
   border-radius: var(--xg-radius-sm);
 }
 
-/* Utility class families that are heavily used in the project */
+/* Utility class families that are heavily used in the project.
+   NOTE: no backdrop-filter here — these classes appear on hundreds of nodes
+   (every book card, list row, badge), and blurring each one creates hundreds
+   of composited layers, which is what made scrolling stutter. */
 .theme-exp .bg-white,
 .theme-exp .bg-white\/80,
 .theme-exp .bg-white\/90,
 .theme-exp .bg-card,
 .theme-exp .bg-popover,
 .theme-exp .bg-background {
-  background: rgba(255,255,255,0.72) !important;
-  backdrop-filter: blur(var(--xg-blur-lg)) saturate(180%);
-  -webkit-backdrop-filter: blur(var(--xg-blur-lg)) saturate(180%);
+  background: rgba(255,255,255,0.86) !important;
 }
 
 .theme-exp .bg-muted {
-  background: rgba(255,255,255,0.46) !important;
+  background: rgba(255,255,255,0.62) !important;
 }
+
 
 .theme-exp .border,
 .theme-exp .border-slate-200,
