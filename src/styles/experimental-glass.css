@@ -307,10 +307,11 @@ body.theme-exp::before {
 /* Dialog / sheet close button already used in ui/dialog.tsx */
 .theme-exp .dialog-close-btn {
   background: linear-gradient(135deg, rgba(255,255,255,0.42), rgba(255,255,255,0.22)) !important;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  box-shadow: 0 8px 24px rgba(15,25,40,.08), inset 0 1px 0 rgba(255,255,255,.14) !important;
   color: #526171;
 }
+
 
 .theme-exp .dialog-close-btn:hover {
   background: linear-gradient(135deg, rgba(255,255,255,0.60), rgba(255,255,255,0.30)) !important;
