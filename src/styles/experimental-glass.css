@@ -44,25 +44,18 @@ body.theme-exp {
   --xg-navy-rgb: 46, 80, 119;
   --xg-teal-rgb: 77, 161, 169;
 
-  background:
-    radial-gradient(900px 600px at 8% -10%, rgba(var(--xg-teal-rgb), 0.18), transparent 60%),
-    radial-gradient(1100px 720px at 110% 5%, rgba(121, 215, 190, 0.20), transparent 62%),
-    radial-gradient(700px 500px at 50% 110%, rgba(var(--xg-navy-rgb), 0.10), transparent 60%),
-    linear-gradient(180deg, #FAF8F4 0%, #EEF3F2 100%);
-  background-attachment: fixed;
+  background-color: #F4F7F6;
 }
 
 .theme-exp body,
 body.theme-exp {
-  background:
-    radial-gradient(900px 600px at 8% -10%, rgba(var(--xg-teal-rgb), 0.18), transparent 60%),
-    radial-gradient(1100px 720px at 110% 5%, rgba(121, 215, 190, 0.20), transparent 62%),
-    radial-gradient(700px 500px at 50% 110%, rgba(var(--xg-navy-rgb), 0.10), transparent 60%),
-    linear-gradient(180deg, #FAF8F4 0%, #EEF3F2 100%);
-  background-attachment: fixed;
+  background: none;
+  background-color: #F4F7F6;
   color: #0f1722;
 }
 
+/* Ambient gradient on a single fixed layer: painted once, never repainted on scroll
+   (previous `background-attachment: fixed` on body forced a full repaint each frame) */
 .theme-exp body::before,
 body.theme-exp::before {
   content: "";
@@ -70,16 +63,31 @@ body.theme-exp::before {
   inset: 0;
   pointer-events: none;
   z-index: -1;
-  background: linear-gradient(180deg, rgba(255,255,255,0.22), transparent 20%);
-  mix-blend-mode: soft-light;
+  background:
+    radial-gradient(900px 600px at 8% -10%, rgba(var(--xg-teal-rgb), 0.18), transparent 60%),
+    radial-gradient(1100px 720px at 110% 5%, rgba(121, 215, 190, 0.20), transparent 62%),
+    radial-gradient(700px 500px at 50% 110%, rgba(var(--xg-navy-rgb), 0.10), transparent 60%),
+    linear-gradient(180deg, #FAF8F4 0%, #EEF3F2 100%);
 }
 
-.theme-exp main,
-.theme-exp [data-page-root] {
-  animation: xg-fade-up var(--xg-t3) var(--xg-ease) both;
+/* Glass surfaces already used in the project.
+   Blur only on the few large surfaces; `.card` is intentionally excluded because
+   it repeats dozens of times per screen. */
+.theme-exp .glass,
+.theme-exp .glass-card,
+.theme-exp .glass-strong,
+.theme-exp .glass-nav,
+.theme-exp .top-sheet,
+.theme-exp .bottom-sheet,
+.theme-exp .popover,
+.theme-exp .dropdown-menu,
+.theme-exp .sidebar,
+.theme-exp .dialog,
+.theme-exp .modal {
+  backdrop-filter: blur(var(--xg-blur-lg)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--xg-blur-lg)) saturate(160%);
 }
 
-/* Glass surfaces already used in the project */
 .theme-exp .glass,
 .theme-exp .glass-card,
 .theme-exp .glass-soft,
@@ -94,39 +102,30 @@ body.theme-exp::before {
 .theme-exp .dialog,
 .theme-exp .modal {
   position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  backdrop-filter: blur(var(--xg-blur-lg)) saturate(180%);
-  -webkit-backdrop-filter: blur(var(--xg-blur-lg)) saturate(180%);
   border: 1px solid var(--xg-stroke-2);
   box-shadow: var(--xg-shadow-2), var(--xg-inset);
   transition:
     transform var(--xg-t2) var(--xg-ease),
     box-shadow var(--xg-t2) var(--xg-ease),
-    background var(--xg-t2) var(--xg-ease),
     border-color var(--xg-t2) var(--xg-ease);
 }
 
-.theme-exp .glass::before,
-.theme-exp .glass-card::before,
-.theme-exp .glass-soft::before,
+/* Specular highlight kept only on the large surfaces (cheap there, costly per-card) */
 .theme-exp .glass-strong::before,
 .theme-exp .glass-nav::before,
 .theme-exp .top-sheet::before,
 .theme-exp .bottom-sheet::before,
-.theme-exp .card::before,
-.theme-exp .popover::before,
-.theme-exp .dropdown-menu::before,
-.theme-exp .sidebar::before,
 .theme-exp .dialog::before,
 .theme-exp .modal::before {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
+  border-radius: inherit;
   background:
     linear-gradient(180deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.08) 18%, transparent 45%);
 }
+
 
 .theme-exp .glass,
 .theme-exp .glass-card,
