@@ -1,6 +1,6 @@
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Heart, Eye, Star } from 'lucide-react';
 import type { Book } from '@/data/books';
 import { useAuth } from '@/hooks/useAuth';
@@ -10,7 +10,7 @@ interface BookCardProps {
   book: Book;
 }
 
-export function BookCard({ book }: BookCardProps) {
+function BookCardBase({ book }: BookCardProps) {
   const formatPrice = (price: number) =>
     new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(price);
 
@@ -40,7 +40,7 @@ export function BookCard({ book }: BookCardProps) {
   return (
     <Link
       to={`/book/${book.id}`}
-      className="group flex flex-col overflow-hidden bg-white/80 backdrop-blur-md border border-slate-200 rounded-lg shadow-sm hover:shadow-md transition-all"
+      className="group flex flex-col overflow-hidden bg-white/90 border border-slate-200 rounded-lg shadow-sm transition-shadow duration-200 hover:shadow-md"
     >
       {/* Cover */}
       <div className="relative aspect-[3/4] overflow-hidden bg-slate-100">
@@ -49,13 +49,14 @@ export function BookCard({ book }: BookCardProps) {
           alt={book.title}
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
           loading="lazy"
+          decoding="async"
         />
         {book.is_free && (
           <Badge className="absolute left-1.5 top-1.5 bg-green-600 text-white text-[10px] px-1.5 py-0 rounded-full border-0 h-4">Gratis</Badge>
         )}
         <button
           onClick={handleFavoriteClick}
-          className="absolute right-1.5 top-1.5 p-1 rounded-full bg-white/90 hover:bg-white shadow-sm border border-slate-200 transition-all"
+          className="absolute right-1.5 top-1.5 p-1 rounded-full bg-white/90 hover:bg-white shadow-sm border border-slate-200 transition-colors"
           aria-label="Favorit"
         >
           <Heart className={`h-3 w-3 ${isFavorite ? 'fill-pink-500 text-pink-500' : 'text-slate-600'}`} />
@@ -88,3 +89,5 @@ export function BookCard({ book }: BookCardProps) {
     </Link>
   );
 }
+
+export const BookCard = memo(BookCardBase);

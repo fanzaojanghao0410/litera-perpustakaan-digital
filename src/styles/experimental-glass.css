@@ -6,10 +6,11 @@
 
 .theme-exp,
 body.theme-exp {
-  --xg-blur-sm: 12px;
-  --xg-blur-md: 20px;
-  --xg-blur-lg: 32px;
-  --xg-blur-xl: 48px;
+  --xg-blur-sm: 8px;
+  --xg-blur-md: 12px;
+  --xg-blur-lg: 16px;
+  --xg-blur-xl: 20px;
+
 
   --xg-bg-1: rgba(255, 255, 255, 0.55);
   --xg-bg-2: rgba(255, 255, 255, 0.72);
@@ -43,25 +44,18 @@ body.theme-exp {
   --xg-navy-rgb: 46, 80, 119;
   --xg-teal-rgb: 77, 161, 169;
 
-  background:
-    radial-gradient(900px 600px at 8% -10%, rgba(var(--xg-teal-rgb), 0.18), transparent 60%),
-    radial-gradient(1100px 720px at 110% 5%, rgba(121, 215, 190, 0.20), transparent 62%),
-    radial-gradient(700px 500px at 50% 110%, rgba(var(--xg-navy-rgb), 0.10), transparent 60%),
-    linear-gradient(180deg, #FAF8F4 0%, #EEF3F2 100%);
-  background-attachment: fixed;
+  background-color: #F4F7F6;
 }
 
 .theme-exp body,
 body.theme-exp {
-  background:
-    radial-gradient(900px 600px at 8% -10%, rgba(var(--xg-teal-rgb), 0.18), transparent 60%),
-    radial-gradient(1100px 720px at 110% 5%, rgba(121, 215, 190, 0.20), transparent 62%),
-    radial-gradient(700px 500px at 50% 110%, rgba(var(--xg-navy-rgb), 0.10), transparent 60%),
-    linear-gradient(180deg, #FAF8F4 0%, #EEF3F2 100%);
-  background-attachment: fixed;
+  background: none;
+  background-color: #F4F7F6;
   color: #0f1722;
 }
 
+/* Ambient gradient on a single fixed layer: painted once, never repainted on scroll
+   (previous `background-attachment: fixed` on body forced a full repaint each frame) */
 .theme-exp body::before,
 body.theme-exp::before {
   content: "";
@@ -69,16 +63,31 @@ body.theme-exp::before {
   inset: 0;
   pointer-events: none;
   z-index: -1;
-  background: linear-gradient(180deg, rgba(255,255,255,0.22), transparent 20%);
-  mix-blend-mode: soft-light;
+  background:
+    radial-gradient(900px 600px at 8% -10%, rgba(var(--xg-teal-rgb), 0.18), transparent 60%),
+    radial-gradient(1100px 720px at 110% 5%, rgba(121, 215, 190, 0.20), transparent 62%),
+    radial-gradient(700px 500px at 50% 110%, rgba(var(--xg-navy-rgb), 0.10), transparent 60%),
+    linear-gradient(180deg, #FAF8F4 0%, #EEF3F2 100%);
 }
 
-.theme-exp main,
-.theme-exp [data-page-root] {
-  animation: xg-fade-up var(--xg-t3) var(--xg-ease) both;
+/* Glass surfaces already used in the project.
+   Blur only on the few large surfaces; `.card` is intentionally excluded because
+   it repeats dozens of times per screen. */
+.theme-exp .glass,
+.theme-exp .glass-card,
+.theme-exp .glass-strong,
+.theme-exp .glass-nav,
+.theme-exp .top-sheet,
+.theme-exp .bottom-sheet,
+.theme-exp .popover,
+.theme-exp .dropdown-menu,
+.theme-exp .sidebar,
+.theme-exp .dialog,
+.theme-exp .modal {
+  backdrop-filter: blur(var(--xg-blur-lg)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--xg-blur-lg)) saturate(160%);
 }
 
-/* Glass surfaces already used in the project */
 .theme-exp .glass,
 .theme-exp .glass-card,
 .theme-exp .glass-soft,
@@ -93,39 +102,31 @@ body.theme-exp::before {
 .theme-exp .dialog,
 .theme-exp .modal {
   position: relative;
-  isolation: isolate;
   overflow: hidden;
-  backdrop-filter: blur(var(--xg-blur-lg)) saturate(180%);
-  -webkit-backdrop-filter: blur(var(--xg-blur-lg)) saturate(180%);
   border: 1px solid var(--xg-stroke-2);
   box-shadow: var(--xg-shadow-2), var(--xg-inset);
   transition:
     transform var(--xg-t2) var(--xg-ease),
     box-shadow var(--xg-t2) var(--xg-ease),
-    background var(--xg-t2) var(--xg-ease),
     border-color var(--xg-t2) var(--xg-ease);
 }
 
-.theme-exp .glass::before,
-.theme-exp .glass-card::before,
-.theme-exp .glass-soft::before,
+/* Specular highlight kept only on the large surfaces (cheap there, costly per-card) */
 .theme-exp .glass-strong::before,
 .theme-exp .glass-nav::before,
 .theme-exp .top-sheet::before,
 .theme-exp .bottom-sheet::before,
-.theme-exp .card::before,
-.theme-exp .popover::before,
-.theme-exp .dropdown-menu::before,
-.theme-exp .sidebar::before,
 .theme-exp .dialog::before,
 .theme-exp .modal::before {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
+  border-radius: inherit;
   background:
     linear-gradient(180deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.08) 18%, transparent 45%);
 }
+
 
 .theme-exp .glass,
 .theme-exp .glass-card,
@@ -279,8 +280,6 @@ body.theme-exp::before {
 .theme-exp .glass-input,
 .theme-exp .input-glass {
   background: linear-gradient(135deg, rgba(255,255,255,0.44), rgba(255,255,255,0.18)) !important;
-  backdrop-filter: blur(var(--xg-blur-sm)) !important;
-  -webkit-backdrop-filter: blur(var(--xg-blur-sm)) !important;
   border: 1px solid rgba(255,255,255,0.14) !important;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 2px 8px rgba(15,25,40,.04) !important;
   color: #0f1722;
@@ -308,12 +307,11 @@ body.theme-exp::before {
 /* Dialog / sheet close button already used in ui/dialog.tsx */
 .theme-exp .dialog-close-btn {
   background: linear-gradient(135deg, rgba(255,255,255,0.42), rgba(255,255,255,0.22)) !important;
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(255,255,255,0.14) !important;
   box-shadow: 0 8px 24px rgba(15,25,40,.08), inset 0 1px 0 rgba(255,255,255,.14) !important;
   color: #526171;
 }
+
 
 .theme-exp .dialog-close-btn:hover {
   background: linear-gradient(135deg, rgba(255,255,255,0.60), rgba(255,255,255,0.30)) !important;
@@ -326,12 +324,10 @@ body.theme-exp::before {
 
 .theme-exp .badge,
 .theme-exp [data-slot="badge"] {
-  background: linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.08));
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(255,255,255,0.12);
   box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
 }
+
 
 /* Actual project wrappers and text treatments */
 .theme-exp .gradient-hero {
@@ -403,21 +399,23 @@ body.theme-exp::before {
   border-radius: var(--xg-radius-sm);
 }
 
-/* Utility class families that are heavily used in the project */
+/* Utility class families that are heavily used in the project.
+   NOTE: no backdrop-filter here — these classes appear on hundreds of nodes
+   (every book card, list row, badge), and blurring each one creates hundreds
+   of composited layers, which is what made scrolling stutter. */
 .theme-exp .bg-white,
 .theme-exp .bg-white\/80,
 .theme-exp .bg-white\/90,
 .theme-exp .bg-card,
 .theme-exp .bg-popover,
 .theme-exp .bg-background {
-  background: rgba(255,255,255,0.72) !important;
-  backdrop-filter: blur(var(--xg-blur-lg)) saturate(180%);
-  -webkit-backdrop-filter: blur(var(--xg-blur-lg)) saturate(180%);
+  background: rgba(255,255,255,0.86) !important;
 }
 
 .theme-exp .bg-muted {
-  background: rgba(255,255,255,0.46) !important;
+  background: rgba(255,255,255,0.62) !important;
 }
+
 
 .theme-exp .border,
 .theme-exp .border-slate-200,
