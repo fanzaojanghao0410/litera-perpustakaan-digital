@@ -1,4 +1,4 @@
-import { motion, AnimatePresence, type Transition } from 'framer-motion';
+import { motion, type Transition } from 'framer-motion';
 import { ReactNode, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -11,21 +11,20 @@ mode?: 'slide' | 'fade' | 'scale' | 'lift';
 Transition Config
 ========================= */
 
+// Tween instead of spring: same feel, far fewer per-frame computations
 const springTransition: Transition = {
-type: 'spring',
-stiffness: 100,
-damping: 20,
-mass: 1,
+duration: 0.28,
+ease: [0.22, 1, 0.36, 1],
 };
 
 const smoothTransition: Transition = {
-duration: 0.5,
+duration: 0.32,
 ease: [0.43, 0.13, 0.23, 0.96],
 };
 
 const fadeTransition: Transition = {
-duration: 0.35,
-ease: 'easeInOut',
+duration: 0.22,
+ease: 'easeOut',
 };
 
 const transitionConfig: Record<string, Transition> = {
@@ -59,9 +58,9 @@ exit: { opacity: 0, scale: 0.985, y: -8 },
 },
 
 lift: {
-initial: { opacity: 0, y: 32 },
+initial: { opacity: 0, y: 16 },
 animate: { opacity: 1, y: 0 },
-exit: { opacity: 0, y: -32 },
+exit: { opacity: 0, y: -16 },
 },
 };
 
