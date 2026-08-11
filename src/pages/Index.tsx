@@ -36,19 +36,9 @@ export default function Index() {
     return () => clearInterval(interval);
   }, []);
 
-  const popularBooks = books.slice(0, 4);
-  const freeBooks = books.filter((b) => b.is_free).slice(0, 4);
+  const popularBooks = books.slice(0, 7);
+  const freeBooks = books.filter((b) => b.is_free).slice(0, 7);
 
-  if (booksLoading || categoriesLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#F6F4F0] via-white to-[#79D7BE]/20 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-[#4DA1A9]" />
-          <p className="text-[#4a7a9e]">Memuat data...</p>
-        </div>
-      </div>
-    );
-  }
 
   const features = [
     { icon: Library, title: 'Koleksi Lengkap', desc: 'Ribuan buku dari berbagai kategori' },
