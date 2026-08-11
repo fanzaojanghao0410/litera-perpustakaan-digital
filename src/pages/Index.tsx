@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { BookOpen, ArrowRight, Loader2, ChevronRight, Search, Heart, Download, Library, Smartphone, Globe, Star } from 'lucide-react';
+import { BookOpen, ArrowRight, ChevronRight, Search, Heart, Download, Library, Smartphone, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BookCard } from '@/components/BookCard';
+import { BookGridSkeleton } from '@/components/ui/states';
 import { useBooks, useCategories } from '@/hooks/useBooks';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -36,19 +37,9 @@ export default function Index() {
     return () => clearInterval(interval);
   }, []);
 
-  const popularBooks = books.slice(0, 4);
-  const freeBooks = books.filter((b) => b.is_free).slice(0, 4);
+  const popularBooks = books.slice(0, 7);
+  const freeBooks = books.filter((b) => b.is_free).slice(0, 7);
 
-  if (booksLoading || categoriesLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#F6F4F0] via-white to-[#79D7BE]/20 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-[#4DA1A9]" />
-          <p className="text-[#4a7a9e]">Memuat data...</p>
-        </div>
-      </div>
-    );
-  }
 
   const features = [
     { icon: Library, title: 'Koleksi Lengkap', desc: 'Ribuan buku dari berbagai kategori' },
@@ -181,62 +172,67 @@ export default function Index() {
 
 
       {/* Popular Books Section */}
-      {popularBooks.length > 0 && (
-        <section className="py-24 animate-fade-in">
-          <div className="container mx-auto px-4 max-w-7xl">
-            <div className="flex items-end justify-between mb-12">
-              <div className="animate-slide-in" style={{ animationDelay: '0.1s' }}>
-                <span className="text-sm font-semibold text-[#4DA1A9] uppercase tracking-wider">Koleksi Terbaik</span>
-                <h2 className="font-heading text-4xl font-bold text-[#2E5077] mt-2">Buku Terpopuler</h2>
-                <p className="text-[#4a7a9e] mt-2">Pilihan terbaik yang paling diminati pembaca</p>
-              </div>
-              <Link to="/catalog" className="hidden md:block animate-scale-in" style={{ animationDelay: '0.2s' }}>
-                <Button variant="outline" className="glass-button-outline h-12 px-6 font-medium rounded-xl">
-                  Lihat Semua <ChevronRight className="h-5 w-5 ml-1" />
-                </Button>
-              </Link>
+      <section className="py-14 md:py-20">
+        <div className="container mx-auto max-w-7xl px-4">
+          <div className="mb-6 flex items-end justify-between gap-4 md:mb-8">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-wider text-secondary">Koleksi Terbaik</span>
+              <h2 className="mt-1.5 font-heading text-2xl font-bold text-foreground md:text-3xl">Buku Terpopuler</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Pilihan terbaik yang paling diminati pembaca</p>
             </div>
-            <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {popularBooks.map((book, index) => (
-                <div key={book.id} className="animate-scale-in" style={{ animationDelay: `${0.3 + index * 0.1}s` }}>
-                  <BookCard book={book} />
-                </div>
+            <Link to="/catalog" className="hidden md:block">
+              <Button variant="outline" className="h-11 rounded-full px-5 font-medium">
+                Lihat Semua <ChevronRight className="ml-1 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+
+          {booksLoading ? (
+            <BookGridSkeleton count={7} />
+          ) : (
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
+              {popularBooks.map((book) => (
+                <BookCard key={book.id} book={book} />
               ))}
             </div>
-            <div className="mt-8 text-center md:hidden animate-slide-in" style={{ animationDelay: '0.8s' }}>
-              <Link to="/catalog">
-                <Button variant="outline" className="glass-button-outline h-12 px-6 font-medium rounded-xl">
-                  Lihat Semua <ChevronRight className="h-5 w-5 ml-1" />
-                </Button>
-              </Link>
-            </div>
+          )}
+
+          <div className="mt-6 text-center md:hidden">
+            <Link to="/catalog">
+              <Button variant="outline" className="h-11 rounded-full px-6 font-medium">
+                Lihat Semua <ChevronRight className="ml-1 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* Free Books Section */}
-      {freeBooks.length > 0 && (
-        <section className="py-24 bg-gradient-to-br from-[#79D7BE]/20 to-[#4DA1A9]/20 animate-fade-in">
-          <div className="container mx-auto px-4 max-w-7xl">
-            <div className="flex items-end justify-between mb-12">
-              <div className="animate-slide-in" style={{ animationDelay: '0.1s' }}>
-                <span className="text-sm font-semibold text-[#4DA1A9] uppercase tracking-wider">Gratis</span>
-                <h2 className="font-heading text-4xl font-bold text-[#2E5077] mt-2">Buku Gratis</h2>
-                <p className="text-[#4a7a9e] mt-2">Baca tanpa biaya, tanpa batasan</p>
+      {(booksLoading || freeBooks.length > 0) && (
+        <section className="border-y border-border/60 bg-muted/40 py-14 md:py-20">
+          <div className="container mx-auto max-w-7xl px-4">
+            <div className="mb-6 flex items-end justify-between gap-4 md:mb-8">
+              <div>
+                <span className="text-xs font-semibold uppercase tracking-wider text-secondary">Gratis</span>
+                <h2 className="mt-1.5 font-heading text-2xl font-bold text-foreground md:text-3xl">Buku Gratis</h2>
+                <p className="mt-1 text-sm text-muted-foreground">Baca tanpa biaya, tanpa batasan</p>
               </div>
-              <Link to="/catalog?filter=free" className="hidden md:block animate-scale-in" style={{ animationDelay: '0.2s' }}>
-                <Button variant="outline" className="glass-button-outline h-12 px-6 font-medium rounded-xl">
-                  Lihat Semua <ChevronRight className="h-5 w-5 ml-1" />
+              <Link to="/catalog" className="hidden md:block">
+                <Button variant="outline" className="h-11 rounded-full px-5 font-medium">
+                  Lihat Semua <ChevronRight className="ml-1 h-4 w-4" />
                 </Button>
               </Link>
             </div>
-            <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {freeBooks.map((book, index) => (
-                <div key={book.id} className="animate-scale-in" style={{ animationDelay: `${0.3 + index * 0.1}s` }}>
-                  <BookCard book={book} />
-                </div>
-              ))}
-            </div>
+
+            {booksLoading ? (
+              <BookGridSkeleton count={7} />
+            ) : (
+              <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
+                {freeBooks.map((book) => (
+                  <BookCard key={book.id} book={book} />
+                ))}
+              </div>
+            )}
           </div>
         </section>
       )}

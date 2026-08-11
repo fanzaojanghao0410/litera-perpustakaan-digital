@@ -1,18 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Search,
-  Loader2,
-  Plus,
-  ArrowUpDown,
-  Eye,
-  TrendingUp,
-  BookOpen,
-} from 'lucide-react';
+import { Search, Plus, ArrowUpDown, Eye, TrendingUp, BookOpen, X } from 'lucide-react';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,206 +12,106 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { BookCard } from '@/components/BookCard';
+import { BookGridSkeleton, EmptyState, PageHeader } from '@/components/ui/states';
 import { useBooks } from '@/hooks/useBooks';
 import { useAuth } from '@/hooks/useAuth';
 
-type SortBy =
-  | 'newest'
-  | 'oldest'
-  | 'popular'
-  | 'price-low'
-  | 'price-high'
-  | 'rating';
+type SortBy = 'newest' | 'oldest' | 'popular' | 'price-low' | 'price-high' | 'rating';
+
+const sortLabels: Record<SortBy, string> = {
+  popular: 'Paling Populer',
+  newest: 'Terbaru',
+  oldest: 'Terlama',
+  rating: 'Rating Tertinggi',
+  'price-low': 'Harga Terendah',
+  'price-high': 'Harga Tertinggi',
+};
 
 export default function Catalog() {
+  const [searchInput, setSearchInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortBy>('popular');
 
-  const { data: books = [], isLoading: booksLoading } = useBooks({
-    search: searchQuery,
-    sortBy,
-  });
+  // Debounce agar tidak memicu query di setiap ketikan
+  useEffect(() => {
+    const t = setTimeout(() => setSearchQuery(searchInput.trim()), 300);
+    return () => clearTimeout(t);
+  }, [searchInput]);
 
+  const { data: books = [], isLoading } = useBooks({ search: searchQuery, sortBy });
   const { user } = useAuth();
 
-  const sortLabels: Record<SortBy, string> = {
-    newest: 'Terbaru',
-    oldest: 'Terlama',
-    popular: 'Paling Populer',
-    'price-low': 'Harga Terendah',
-    'price-high': 'Harga Tertinggi',
-    rating: 'Rating Tertinggi',
-  };
-
-  const totalReaders = books.reduce(
-    (sum, b) => sum + (b.total_reads || 0),
-    0
-  );
-
-  const mostReadBook =
-    books.length > 0
-      ? books.reduce(
-          (max, b) =>
-            (b.total_reads || 0) > (max.total_reads || 0)
-              ? b
-              : max,
-          books[0]
-        )
+  const { totalReaders, mostRead } = useMemo(() => {
+    const total = books.reduce((sum, b) => sum + (b.total_reads || 0), 0);
+    const top = books.length
+      ? books.reduce((max, b) => ((b.total_reads || 0) > (max.total_reads || 0) ? b : max), books[0])
       : null;
+    return { totalReaders: total, mostRead: top };
+  }, [books]);
+
+  const stats = [
+    { icon: BookOpen, label: 'Total Buku', value: isLoading ? '—' : books.length.toLocaleString('id-ID') },
+    { icon: Eye, label: 'Total Pembaca', value: isLoading ? '—' : totalReaders.toLocaleString('id-ID') },
+    {
+      icon: TrendingUp,
+      label: 'Paling Populer',
+      value: isLoading || !mostRead ? '—' : `${(mostRead.total_reads || 0).toLocaleString('id-ID')} baca`,
+      hideOnMobile: true,
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F6F4F0] via-white to-[#79D7BE]/20 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900 py-6 md:py-10 animate-fade-in">
-      <div className="container mx-auto px-3 md:px-4 max-w-7xl">
-        {/* Header */}
-        <div className="mb-4 animate-slide-in">
-          <h1 className="font-heading text-2xl md:text-3xl font-bold text-[#2E5077]">
-            Cari Buku
-          </h1>
+    <div className="py-6 md:py-10">
+      <div className="container mx-auto max-w-7xl px-4">
+        <PageHeader title="Cari Buku" description="Temukan judul, penulis, atau kategori favoritmu" />
 
-          <p className="mt-1 text-xs md:text-sm text-[#4a7a9e]">
-            Temukan judul, penulis, atau kategori favoritmu
-          </p>
-        </div>
-
-        {/* Stats Overview */}
-        <div
-          className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8 animate-slide-in"
-          style={{ animationDelay: '0.05s' }}
-        >
-          <Card className="bg-white border-[#4DA1A9]/20 shadow-sm">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-[#2E5077]/10">
-                <BookOpen className="h-5 w-5 text-[#2E5077]" />
-              </div>
-
-              <div>
-                <p className="text-xs text-[#4a7a9e]">
-                  Total Buku
-                </p>
-
-                <p className="text-xl font-bold text-[#2E5077]">
-                  {booksLoading ? '-' : books.length}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white border-[#4DA1A9]/20 shadow-sm">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-[#4DA1A9]/10">
-                <Eye className="h-5 w-5 text-[#4DA1A9]" />
-              </div>
-
-              <div>
-                <p className="text-xs text-[#4a7a9e]">
-                  Total Pembaca
-                </p>
-
-                <p className="text-xl font-bold text-[#2E5077]">
-                  {booksLoading
-                    ? '-'
-                    : totalReaders.toLocaleString()}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white border-[#4DA1A9]/20 shadow-sm hidden md:block">
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-[#79D7BE]/20">
-                <TrendingUp className="h-5 w-5 text-[#79D7BE]" />
-              </div>
-
-              <div>
-                <p className="text-xs text-[#4a7a9e]">
-                  Paling Populer
-                </p>
-
-                <p className="text-lg font-bold text-[#2E5077] truncate">
-                  {booksLoading || !mostReadBook
-                    ? '-'
-                    : `${mostReadBook.total_reads?.toLocaleString()} baca`}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Search & Controls */}
-        <div
-          className="mb-6 flex flex-col gap-4 animate-slide-in"
-          style={{ animationDelay: '0.1s' }}
-        >
-          <div className="flex flex-col md:flex-row gap-3">
-            {/* Search */}
+        {/* Search & kontrol — sticky agar selalu terjangkau saat scroll */}
+        <div className="sticky top-16 z-30 -mx-4 mb-5 border-b border-border/60 bg-background/90 px-4 py-3 backdrop-blur md:static md:mx-0 md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-0">
+          <div className="flex flex-col gap-3 md:flex-row">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#4DA1A9]" />
-
+              <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
               <Input
+                type="search"
+                aria-label="Cari buku"
                 placeholder="Cari judul, penulis, atau sinopsis..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-11 border-[#4DA1A9]/30 rounded-full focus:border-[#4DA1A9] focus:ring-[#4DA1A9]/20"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                className="h-11 rounded-full pl-10 pr-10"
               />
+              {searchInput && (
+                <button
+                  type="button"
+                  onClick={() => setSearchInput('')}
+                  aria-label="Bersihkan pencarian"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
             </div>
 
-            {/* Controls */}
             <div className="flex items-center gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="h-11 px-4 gap-2 rounded-full border-[#4DA1A9]/30"
-                  >
+                  <Button variant="outline" className="h-11 flex-1 gap-2 rounded-full px-4 md:flex-none">
                     <ArrowUpDown className="h-4 w-4" />
-                    {sortLabels[sortBy]}
+                    <span className="truncate">{sortLabels[sortBy]}</span>
                   </Button>
                 </DropdownMenuTrigger>
-
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={() => setSortBy('popular')}
-                  >
-                    Paling Populer
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem
-                    onClick={() => setSortBy('newest')}
-                  >
-                    Terbaru
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem
-                    onClick={() => setSortBy('oldest')}
-                  >
-                    Terlama
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem
-                    onClick={() => setSortBy('rating')}
-                  >
-                    Rating Tertinggi
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem
-                    onClick={() => setSortBy('price-low')}
-                  >
-                    Harga Terendah
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem
-                    onClick={() => setSortBy('price-high')}
-                  >
-                    Harga Tertinggi
-                  </DropdownMenuItem>
+                  {(Object.keys(sortLabels) as SortBy[]).map((key) => (
+                    <DropdownMenuItem key={key} onClick={() => setSortBy(key)}>
+                      {sortLabels[key]}
+                    </DropdownMenuItem>
+                  ))}
                 </DropdownMenuContent>
               </DropdownMenu>
 
               {user && (
                 <Link to="/upload" className="shrink-0">
-                  <Button className="apple-button h-11 px-5 gap-2 rounded-full">
+                  <Button className="apple-button h-11 gap-2 rounded-full px-5">
                     <Plus className="h-4 w-4" />
-                    Upload
+                    <span className="hidden sm:inline">Upload</span>
                   </Button>
                 </Link>
               )}
@@ -228,39 +119,53 @@ export default function Catalog() {
           </div>
         </div>
 
-        {/* Book Grid */}
-        {booksLoading ? (
-          <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-[#4DA1A9]" />
-          </div>
-        ) : books.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#4DA1A9]/10">
-              <Search className="h-8 w-8 text-[#4DA1A9]" />
-            </div>
-
-            <h3 className="font-heading text-lg font-semibold text-[#2E5077] mb-2">
-              Buku tidak ditemukan
-            </h3>
-
-            <p className="text-sm text-[#4a7a9e] mb-4">
-              Coba ubah kata kunci pencarian
-            </p>
-          </div>
-        ) : (
-          <div className="grid gap-3 grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
-            {books.map((book, index) => (
-              <div
-                key={book.id}
-                className="animate-scale-in"
-                style={{
-                  animationDelay: `${Math.min(index * 0.02, 0.5)}s`,
-                }}
-              >
-                <BookCard book={book} />
+        {/* Ringkasan */}
+        <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-3">
+          {stats.map(({ icon: Icon, label, value, hideOnMobile }) => (
+            <div
+              key={label}
+              className={`flex items-center gap-3 rounded-xl border border-border bg-card p-3.5 ${hideOnMobile ? 'hidden md:flex' : ''}`}
+            >
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-secondary/10 text-secondary">
+                <Icon className="h-5 w-5" aria-hidden />
               </div>
-            ))}
-          </div>
+              <div className="min-w-0">
+                <p className="text-xs text-muted-foreground">{label}</p>
+                <p className="truncate text-lg font-bold text-foreground">{value}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Grid buku */}
+        {isLoading ? (
+          <BookGridSkeleton />
+        ) : books.length === 0 ? (
+          <EmptyState
+            icon={<Search className="h-6 w-6" />}
+            title="Buku tidak ditemukan"
+            description={
+              searchQuery
+                ? `Tidak ada hasil untuk "${searchQuery}". Coba kata kunci lain.`
+                : 'Belum ada buku yang tersedia saat ini.'
+            }
+            action={
+              searchQuery ? (
+                <Button variant="outline" className="rounded-full" onClick={() => setSearchInput('')}>
+                  Hapus filter
+                </Button>
+              ) : undefined
+            }
+          />
+        ) : (
+          <>
+            <p className="mb-3 text-xs text-muted-foreground">{books.length} buku ditemukan</p>
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7">
+              {books.map((book) => (
+                <BookCard key={book.id} book={book} />
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>
