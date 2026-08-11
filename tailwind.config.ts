@@ -11,30 +11,30 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        // Blue Theme Colors - Modern & Professional
+        // Semantic tokens — sumber tunggal dari index.css
         primary: {
-          DEFAULT: "hsl(207, 48%, 35%)", // #234C6A - Modern Blue
-          foreground: "hsl(0, 0%, 98%)",
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(207, 30%, 60%)", // Light Blue
-          foreground: "hsl(207, 48%, 35%)",
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(207, 40%, 70%)", // Accent Blue
-          foreground: "hsl(207, 48%, 35%)",
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
         },
         muted: {
-          DEFAULT: "hsl(207, 10%, 95%)", // Very Light Blue
-          foreground: "hsl(207, 5%, 45%)",
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
         },
         card: {
-          DEFAULT: "hsl(0, 0%, 100%)", // Pure white for glass effect
-          foreground: "hsl(210, 40%, 10%)", // Dark text for contrast
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
         },
         popover: {
-          DEFAULT: "hsl(0, 0%, 98%)", // Near white
-          foreground: "hsl(210, 40%, 5%)",
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
