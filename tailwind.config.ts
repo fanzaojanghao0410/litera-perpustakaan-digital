@@ -47,7 +47,8 @@ export default {
         sm: "12px",
       },
       fontFamily: {
-        heading: ['"Inter"', '"system-ui"', '"sans-serif"'], // Modern sans-serif
+        heading: ['"DM Sans"', '"Inter"', "system-ui", "sans-serif"],
+        sans: ['"Inter"', "system-ui", "sans-serif"],
       },
       keyframes: {
         gradientShift: {
