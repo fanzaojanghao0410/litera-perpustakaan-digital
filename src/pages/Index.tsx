@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { BookOpen, ArrowRight, Loader2, ChevronRight, Search, Heart, Download, Library, Smartphone, Globe, Star } from 'lucide-react';
+import { BookOpen, ArrowRight, ChevronRight, Search, Heart, Download, Library, Smartphone, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BookCard } from '@/components/BookCard';
+import { BookGridSkeleton } from '@/components/ui/states';
 import { useBooks, useCategories } from '@/hooks/useBooks';
 import { useAuth } from '@/hooks/useAuth';
 
