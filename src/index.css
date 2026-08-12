@@ -546,3 +546,12 @@
     transform: none;
   }
 }
+
+/* Carousel horizontal tanpa scrollbar terlihat */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
