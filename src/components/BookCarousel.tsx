@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from 'react';
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { BookCard } from '@/components/BookCard';
@@ -9,7 +9,6 @@ import { cn } from '@/lib/utils';
 interface BookCarouselProps {
   title: string;
   subtitle?: string;
-  icon?: ReactNode;
   books: Book[];
   isLoading?: boolean;
   viewAllTo?: string;
@@ -23,7 +22,6 @@ interface BookCarouselProps {
 export function BookCarousel({
   title,
   subtitle,
-  icon,
   books,
   isLoading,
   viewAllTo,
@@ -41,10 +39,9 @@ export function BookCarousel({
 
   return (
     <section className={cn('mb-7 md:mb-9', className)}>
-      <div className="mb-2.5 flex items-end justify-between gap-3 px-4">
+      <div className="mb-2.5 flex items-end justify-between gap-3 px-4 md:px-6">
         <div className="min-w-0">
-          <h2 className="flex items-center gap-1.5 font-heading text-base font-bold tracking-tight text-foreground md:text-lg">
-            {icon}
+          <h2 className="font-heading text-base font-bold tracking-tight text-foreground md:text-lg">
             <span className="truncate">{title}</span>
           </h2>
           {subtitle && <p className="mt-0.5 truncate text-xs text-muted-foreground">{subtitle}</p>}
@@ -82,7 +79,7 @@ export function BookCarousel({
 
       <div
         ref={trackRef}
-        className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth px-4 pb-1"
+        className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 scroll-smooth pb-1 pl-4 md:scroll-px-6 md:pl-6"
       >
         {(isLoading ? Array.from({ length: 8 }) : books).map((item, i) => (
           <div
@@ -92,6 +89,8 @@ export function BookCarousel({
             {isLoading ? <BookCardSkeleton /> : <BookCard book={item as Book} />}
           </div>
         ))}
+        {/* Spacer: memberi jeda di ujung kanan (padding-right sering diabaikan pada flex overflow) */}
+        <div aria-hidden className="w-1 shrink-0 md:w-3" />
       </div>
     </section>
   );

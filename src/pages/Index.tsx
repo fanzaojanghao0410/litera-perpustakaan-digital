@@ -1,20 +1,10 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Search,
-  Sparkles,
-  Flame,
-  TrendingUp,
-  Eye,
-  Star,
-  Clock,
-  BookOpen,
-  ArrowRight,
-  PenLine,
-} from 'lucide-react';
+import { Search, BookOpen, ArrowRight, PenLine } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { BookCarousel } from '@/components/BookCarousel';
+import { HomeHero } from '@/components/HomeHero';
 import { EmptyState } from '@/components/ui/states';
 import { useHomeFeed, useContinueReading } from '@/hooks/useHome';
 import { useAuth } from '@/hooks/useAuth';
@@ -47,8 +37,8 @@ export default function Index() {
   return (
     <div className="pb-8">
       {/* Bar sambutan + pencarian — compact, langsung ke konten */}
-      <section className="border-b border-border/60 bg-card/60 px-4 py-4 md:py-5">
-        <div className="container mx-auto max-w-7xl">
+      <section className="border-b border-border/60 bg-card/60 px-4 py-4 md:px-6 md:py-5">
+        <div className="container mx-auto max-w-7xl px-0">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="min-w-0">
               <p className="text-xs text-muted-foreground">{greeting}</p>
@@ -83,15 +73,19 @@ export default function Index() {
         </div>
       </section>
 
-      <div className="container mx-auto max-w-7xl pt-5 md:pt-6">
+      <div className="container mx-auto max-w-7xl px-0 pt-4 md:pt-6">
+        {/* Hero karya unggulan */}
+        <div className="mb-7 md:mb-9">
+          <HomeHero books={feed?.trending?.length ? feed.trending : feed?.recommended ?? []} isLoading={isLoading} />
+        </div>
+
         {/* Lanjutkan membaca */}
         {continueReading.length > 0 && (
           <section className="mb-7 md:mb-9">
-            <h2 className="mb-2.5 flex items-center gap-1.5 px-4 font-heading text-base font-bold tracking-tight text-foreground md:text-lg">
-              <BookOpen className="h-4 w-4 text-primary" aria-hidden />
+            <h2 className="mb-2.5 px-4 font-heading text-base font-bold tracking-tight text-foreground md:px-6 md:text-lg">
               Lanjutkan Membaca
             </h2>
-            <div className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1">
+            <div className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 pb-1 pl-4 md:scroll-px-6 md:pl-6">
               {continueReading.map(({ book, percent }) => (
                 <Link
                   key={book.id}
@@ -117,6 +111,7 @@ export default function Index() {
                   </div>
                 </Link>
               ))}
+              <div aria-hidden className="w-1 shrink-0 md:w-3" />
             </div>
           </section>
         )}
@@ -124,7 +119,6 @@ export default function Index() {
         <BookCarousel
           title="Rekomendasi Untukmu"
           subtitle="Dipilih dari koleksi Litera"
-          icon={<Sparkles className="h-4 w-4 text-primary" aria-hidden />}
           books={feed?.recommended ?? []}
           isLoading={isLoading}
           viewAllTo="/catalog"
@@ -132,7 +126,6 @@ export default function Index() {
 
         <BookCarousel
           title="Populer Bulan Ini"
-          icon={<Flame className="h-4 w-4 text-primary" aria-hidden />}
           books={feed?.popularMonth ?? []}
           isLoading={isLoading}
           viewAllTo="/catalog"
@@ -140,7 +133,6 @@ export default function Index() {
 
         <BookCarousel
           title="Paling Banyak Dibaca"
-          icon={<Eye className="h-4 w-4 text-primary" aria-hidden />}
           books={feed?.mostRead ?? []}
           isLoading={isLoading}
           viewAllTo="/catalog"
@@ -148,7 +140,6 @@ export default function Index() {
 
         <BookCarousel
           title="Sedang Tren"
-          icon={<TrendingUp className="h-4 w-4 text-primary" aria-hidden />}
           books={feed?.trending ?? []}
           isLoading={isLoading}
           viewAllTo="/catalog"
@@ -156,7 +147,6 @@ export default function Index() {
 
         <BookCarousel
           title="Rilisan Baru"
-          icon={<Clock className="h-4 w-4 text-primary" aria-hidden />}
           books={feed?.newReleases ?? []}
           isLoading={isLoading}
           viewAllTo="/catalog"
@@ -164,7 +154,6 @@ export default function Index() {
 
         <BookCarousel
           title="Rating Tertinggi"
-          icon={<Star className="h-4 w-4 text-primary" aria-hidden />}
           books={feed?.topRated ?? []}
           isLoading={isLoading}
           viewAllTo="/catalog"
@@ -184,10 +173,10 @@ export default function Index() {
         {/* Featured authors */}
         {(feed?.featuredAuthors?.length ?? 0) > 0 && (
           <section className="mb-7 md:mb-9">
-            <h2 className="mb-2.5 px-4 font-heading text-base font-bold tracking-tight text-foreground md:text-lg">
+            <h2 className="mb-2.5 px-4 font-heading text-base font-bold tracking-tight text-foreground md:px-6 md:text-lg">
               Penulis Pilihan
             </h2>
-            <div className="no-scrollbar flex snap-x gap-3 overflow-x-auto px-4 pb-1">
+            <div className="no-scrollbar flex snap-x gap-3 overflow-x-auto scroll-px-4 pb-1 pl-4 md:scroll-px-6 md:pl-6">
               {feed!.featuredAuthors.map((a) => (
                 <div
                   key={a.name}
@@ -202,6 +191,7 @@ export default function Index() {
                   </p>
                 </div>
               ))}
+              <div aria-hidden className="w-1 shrink-0 md:w-3" />
             </div>
           </section>
         )}
