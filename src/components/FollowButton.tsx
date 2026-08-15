@@ -29,7 +29,7 @@ export function FollowButton({ targetId, size = 'md', className }: FollowButtonP
         toggle.mutate({ targetId, isFollowing });
       }}
       className={cn(
-        'rounded-full font-semibold transition-colors',
+        'rounded-full font-semibold transition-all duration-200 active:scale-[0.97] disabled:opacity-60',
         size === 'sm' ? 'px-3 py-1.5 text-xs' : 'px-5 py-2 text-sm',
         isFollowing
           ? 'border border-border bg-card text-foreground hover:bg-muted'
