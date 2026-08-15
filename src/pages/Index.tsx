@@ -47,20 +47,16 @@ export default function Index() {
               </h1>
             </div>
 
-            <div className="flex items-center gap-2">
-              {user ? (
+            {user && (
+              <div className="flex items-center gap-2">
                 <Link to="/dashboard">
-                  <Button variant="outline" className="h-10 gap-2 rounded-full px-4 text-sm">
+                  <Button variant="outline" className="h-10 gap-2 rounded-full px-4 text-sm transition-transform active:scale-[0.97]">
                     <PenLine className="h-4 w-4" />
                     <span className="hidden sm:inline">Karya saya</span>
                   </Button>
                 </Link>
-              ) : (
-                <Link to="/register">
-                  <Button className="apple-button h-10 rounded-full px-5 text-sm">Daftar gratis</Button>
-                </Link>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           <Link
