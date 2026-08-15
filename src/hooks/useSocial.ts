@@ -165,7 +165,7 @@ export function useAuthorBooks(userId?: string, includeDrafts = false) {
     queryFn: async () => {
       let query = db
         .from('books')
-        .select('id, title, cover_url, synopsis, status, total_reads, total_chapters, created_at')
+        .select('*')
         .eq('uploader_id', userId)
         .order('created_at', { ascending: false });
       if (!includeDrafts) query = query.eq('status', 'published');
