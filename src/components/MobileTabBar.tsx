@@ -1,11 +1,11 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Search, MessageCircle, Heart, User } from 'lucide-react';
+import { Home, Search, Users, Heart, User } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
 const tabs = [
   { label: 'Beranda', to: '/', icon: Home },
   { label: 'Cari', to: '/catalog', icon: Search },
-  { label: 'Chat', to: '/community', icon: MessageCircle, requiresAuth: true },
+  { label: 'Sosial', to: '/social', icon: Users },
   { label: 'Favorit', to: '/favorites', icon: Heart, requiresAuth: true },
 ];
 
@@ -16,7 +16,7 @@ export function MobileTabBar() {
   const items = [
     ...tabs.filter((t) => !t.requiresAuth || user),
     user
-      ? { label: 'Akun', to: '/dashboard', icon: User }
+      ? { label: 'Akun', to: '/profile', icon: User }
       : { label: 'Masuk', to: '/login', icon: User },
   ];
 

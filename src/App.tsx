@@ -25,6 +25,8 @@ import ReadBook from "./pages/ReadBook";
 import ReadChapter from "./pages/ReadChapter";
 import ChapterAdd from "./pages/ChapterAdd";
 import CommunityChat from "./pages/CommunityChat";
+import Social from "./pages/Social";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -151,6 +153,30 @@ const AnimatedRoutes = () => {
             element={
               <PageTransition mode="fade">
                 <CommunityChat />
+              </PageTransition>
+            } 
+          />
+          <Route 
+            path="/social" 
+            element={
+              <PageTransition mode="fade">
+                <Social />
+              </PageTransition>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <PageTransition mode="fade">
+                <Profile />
+              </PageTransition>
+            } 
+          />
+          <Route 
+            path="/profile/:id" 
+            element={
+              <PageTransition mode="fade">
+                <Profile />
               </PageTransition>
             } 
           />

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, User, LogOut, Settings, Home, Search, MessageCircle, Heart } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, Home, Search, MessageCircle, Heart, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/useAuth';
@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 const navLinks = [
   { label: 'Beranda', to: '/', icon: Home },
   { label: 'Cari Buku', to: '/catalog', icon: Search },
+  { label: 'Sosial', to: '/social', icon: Users, requiresAuth: false },
   { label: 'Chat', to: '/community', icon: MessageCircle, requiresAuth: true },
   { label: 'Favorit', to: '/favorites', icon: Heart, requiresAuth: true },
 ];
@@ -64,8 +65,8 @@ export function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="flex items-center gap-2">
-                      <User className="h-4 w-4" /> Dashboard
+                    <Link to="/profile" className="flex items-center gap-2">
+                      <User className="h-4 w-4" /> Profil saya
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
@@ -118,7 +119,8 @@ export function Navbar() {
           })}
           {user && (
             <>
-              <Link to="/dashboard" className="block px-4 py-3 text-sm font-medium text-[#4a7a9e] hover:text-[#2E5077]" onClick={() => setMobileOpen(false)}>Dashboard</Link>
+              <Link to="/profile" className="block px-4 py-3 text-sm font-medium text-[#4a7a9e] hover:text-[#2E5077]" onClick={() => setMobileOpen(false)}>Profil saya</Link>
+              <Link to="/dashboard" className="block px-4 py-3 text-sm font-medium text-[#4a7a9e] hover:text-[#2E5077]" onClick={() => setMobileOpen(false)}>Kelola karya</Link>
               <Link to="/settings" className="block px-4 py-3 text-sm font-medium text-[#4a7a9e] hover:text-[#2E5077]" onClick={() => setMobileOpen(false)}>Pengaturan</Link>
             </>
           )}
